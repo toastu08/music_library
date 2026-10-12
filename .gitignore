@@ -1,0 +1,58 @@
+# ---- .NET build output ----
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+artifacts/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+
+# ---- NuGet ----
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+project.lock.json
+project.fragment.lock.json
+
+# ---- Publish / self-contained output ----
+publish/
+*.publish.xml
+
+# ---- Visual Studio / VS Code / Rider ----
+.vs/
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.rsuser
+.idea/
+*.DotSettings.user
+
+# ---- Build results of test/coverage tools ----
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+coverage*.info
+
+# ---- Crash dumps / profiling ----
+*.trx
+*.dmp
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+# ---- OS junk ----
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ---- Logs and temp ----
+*.log
+*.tmp
+*.temp
