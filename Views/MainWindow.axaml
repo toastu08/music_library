@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:music_library.ViewModels"
+        xmlns:models="using:music_library.Models"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -15,10 +16,76 @@
         <vm:MainViewModel />
     </Design.DataContext>
 
-    <StackPanel>
-        <Button Content = "start" Command = "{Binding PlayMusicCommand}"/>
-        <Button Content = "pause/resume" Command = "{Binding TogglePauseCommand}"/>
-        <Button Content = "stop" Command = "{Binding StopMusicCommand}"/>
-    </StackPanel>
+    <!-- Root grid: playlist area on top (*), playback bar pinned to the bottom (Auto).
+         The playback bar sits OUTSIDE the SplitView, so opening the pane never covers it. -->
+    <Grid RowDefinitions="*,Auto">
+
+        <!-- ================= SplitView ================= -->
+        <SplitView Grid.Row="0"
+                   DisplayMode="CompactInline"
+                   IsPaneOpen="{Binding IsPaneOpen}"
+                   OpenPaneLength="330">
+
+            <SplitView.Pane>
+                <StackPanel Spacing="8" Margin="8">
+                    <!-- Open / close the pane (command not wired yet) -->
+                    <Button Content="☰" HorizontalAlignment="Stretch" Command="{Binding TogglePaneCommand}"/>
+                    <!-- Import a music source (no functionality yet) -->
+                    <Button Content="+" HorizontalAlignment="Stretch" Command="{Binding SelectFolderCommand}" CommandParameter="{Binding $parent[Window]}"/>
+                </StackPanel>
+            </SplitView.Pane>
+
+            <SplitView.Content>
+                <!-- Song names of the current playlist, top to bottom -->
+                <ListBox ItemsSource="{Binding Playlist}"
+                 Margin="12"
+                 SelectedItem="{Binding SelectedSong, Mode=TwoWay}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="models:Song">
+                            <TextBlock Text="{Binding}" Padding="4,6"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </SplitView.Content>
+        </SplitView>
+
+        <!-- ================= Bottom playback bar =================
+             transport buttons (~1/5) - position slider (~3/5) - volume slider (~1/5) -->
+        <Border Grid.Row="1"
+                Padding="12,6"
+                BorderThickness="0,1,0,0"
+                BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}">
+            <Grid ColumnDefinitions="1*,3*,1*">
+
+                <!-- Transport buttons (previous / play-pause / next) -->
+                <StackPanel Grid.Column="0"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Spacing="8">
+                    <Button Content="Previous" Command="{Binding PlayPreviousCommand}"/>
+                    <Button Content="Play/Pause" Command="{Binding TogglePauseCommand}"/>
+                    <Button Content="Next" Command="{Binding PlayNextCommand}"/>
+                </StackPanel>
+
+                <!-- Horizontal slider: playback position (will bind to the media engine timestamp) -->
+                <Slider Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Margin="12,0"
+                        Minimum="0"
+                        Maximum="100"/>
+
+                <!-- Vertical slider: volume (will bind to the media engine volume) -->
+                <Slider Grid.Column="2"
+                        Orientation="Vertical"
+                        HorizontalAlignment="Center"
+                        Height="48"
+                        Minimum="0"
+                        Maximum="100"/>
+
+            </Grid>
+        </Border>
+
+    </Grid>
 
 </Window>
