@@ -32,16 +32,17 @@
                     <Button Content="☰" HorizontalAlignment="Stretch" Command="{Binding TogglePaneCommand}"/>
                     <!-- Import a music source (no functionality yet) -->
                     <Button Content="+" HorizontalAlignment="Stretch" Command="{Binding SelectFolderCommand}" CommandParameter="{Binding $parent[Window]}"/>
+                    <Button Content="PloyLoopTest" HorizontalAlignment="Stretch" Command="{Binding DescribeAllCommand}"/>
                 </StackPanel>
             </SplitView.Pane>
 
             <SplitView.Content>
                 <!-- Song names of the current playlist, top to bottom -->
-                <ListBox ItemsSource="{Binding Playlist}"
+                <ListBox ItemsSource="{Binding SongLibrary}"
                  Margin="12"
-                 SelectedItem="{Binding SelectedSong, Mode=TwoWay}">
+                 SelectedItem="{Binding SelectedAudio, Mode=TwoWay}">
                     <ListBox.ItemTemplate>
-                        <DataTemplate x:DataType="models:Song">
+                        <DataTemplate x:DataType="models:Audio">
                             <TextBlock Text="{Binding}" Padding="4,6"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

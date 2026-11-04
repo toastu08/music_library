@@ -19,13 +19,21 @@ public partial class MainViewModel : ViewModelBase
 
 
     //observable proerties
-    public Playlist Playlist { get; } = new();
+    //[ObservableProperty]
+    public Library SongLibrary { get; } = new();
+
+    public RecentlyPlayed<Audio> RecentlyPlayed { get; } = new();
+
+    public ActivityLog Log { get; } = new();
 
     [ObservableProperty]
     private bool _isPaneOpen = false;
 
     [ObservableProperty]
-    private Song? _selectedSong;
+    private Audio? _selectedAudio;
+
+    [ObservableProperty]
+    private int _trackCount;
 
 
     //init
@@ -33,26 +41,36 @@ public partial class MainViewModel : ViewModelBase
         _mediaEngine = new VLCMediaEngine();
 
         
-        //PlaylistSongs.Add("Feel It All Again");
-        //PlaylistSongs.Add("GRUDGEFUNK!!");
+        SongLibrary.AudioAdded += Log.OnAudioAdded;
+        SongLibrary.AudioAdded += OnAudioAdded;
+
+        
+        SongLibrary.CollectionChanged += (_, _) => TrackCount = SongLibrary.Count;
+
+        
 
         
     }
 
     //hooks
-    partial void OnSelectedSongChanged(Song? value)
+    partial void OnSelectedAudioChanged(Audio? value)
     {
         PlaySelected();
+    }
+
+    private void OnAudioAdded(object? sender, AudioAddedEventArgs e){
+        TrackCount = e.Count;
     }
 
 
     //relay commands
     [RelayCommand]
     public void PlaySelected(){
-        if(SelectedSong is null){
+        if(SelectedAudio is null){
             return;
         }
-        _mediaEngine.Play(SelectedSong.getFilePath());
+        RecentlyPlayed.Record(SelectedAudio);
+        _mediaEngine.Play(SelectedAudio.getFilePath());
     }
 
     [RelayCommand]
@@ -72,34 +90,34 @@ public partial class MainViewModel : ViewModelBase
 
     [RelayCommand]
     public void PlayNext(){
-        if (Playlist.Count == 0){
+        if (SongLibrary.Count == 0){
             return;
         }
 
-        int currentIndex = Playlist.IndexOf(SelectedSong);
+        int currentIndex = SelectedAudio is null ? -1 : SongLibrary.IndexOf(SelectedAudio);
         int nextIndex = currentIndex + 1;
 
-        if(nextIndex >= Playlist.Count){
+        if(nextIndex >= SongLibrary.Count){
             nextIndex = 0;
         }
         
-        SelectedSong = Playlist[nextIndex];
+        SelectedAudio = SongLibrary[nextIndex];
     }
 
     [RelayCommand]
     public void PlayPrevious(){
-        if (Playlist.Count == 0){
+        if (SongLibrary.Count == 0){
             return;
         }
 
-        int currentIndex = Playlist.IndexOf(SelectedSong);
+        int currentIndex = SelectedAudio is null ? -1 : SongLibrary.IndexOf(SelectedAudio);
         int nextIndex = currentIndex - 1;
 
         if(nextIndex < 0){
-            nextIndex = Playlist.Count - 1;
+            nextIndex = SongLibrary.Count - 1;
         }
         
-        SelectedSong = Playlist[nextIndex];
+        SelectedAudio = SongLibrary[nextIndex];
     }
 
     [RelayCommand]
@@ -132,12 +150,40 @@ public partial class MainViewModel : ViewModelBase
                         
                         string? filePath = file.Path.LocalPath;
                         
-                        Playlist.AddSongFromPath(filePath);
+                        SongLibrary.AddSongFromPath(filePath);
                         
                     }
                 }
             
         }
+    }
+
+    [RelayCommand]
+    public void DescribeAll(){
+        if(SongLibrary.Count == 0){
+            return;
+        }
+
+        //adding some random "recording" metadata because i dont have any
+        Recording recording1 = new Recording("recording1", "author1", 198, "~recordings/recording1.mp3", PlaybackState.Stopped);
+        Recording recording2 = new Recording("recording2", "author2", 287, "~recordings/recording2.mp3", PlaybackState.Stopped);
+        Recording recording3 = new Recording("recording3", "author3", 900, "~recordings/recording3.mp3", PlaybackState.Stopped);
+        Recording recording4 = new Recording("recording4", "author4", 3, "~recordings/recording4.mp3", PlaybackState.Stopped);
+        
+        SongLibrary.Add(recording1);
+        SongLibrary.Add(recording2);
+        SongLibrary.Add(recording3);
+        SongLibrary.Add(recording4);
+
+        SongLibrary.DescribeAll();
+
+        //removing them because they were just metadata for testing
+        SongLibrary.Remove(recording1);
+        SongLibrary.Remove(recording2);
+        SongLibrary.Remove(recording3);
+        SongLibrary.Remove(recording4);
+
+
     }
 
 

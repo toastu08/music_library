@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/Tests/">
+    <Project Path="Tests/music_library.Tests/music_library.Tests.csproj" />
+  </Folder>
+  <Project Path="music_library.csproj" />
+</Solution>

@@ -1,37 +1,28 @@
-
-
 namespace music_library.Models;
+using System;
 
-public class Song : IMedia{
-    string? title {get; set; }
-    string? author {get; set; }
-    int duration {get; set; }
-    string? filePath {get; set;}
-    PlaybackState? playbackState {get; set;}
-
-    public Song(string title, string author, int duration, string filePath, PlaybackState playbackState){
-        this.title = title;
-        this.author = author;
-        this.duration = duration;
-        this.filePath = filePath;
-        this.playbackState = playbackState;
+public class Song : Audio{
+    
+    public Song(string title, string author, int duration, string filePath, PlaybackState state){
+        this.Title = title;
+        this.Author = author;
+        this.Duration = TimeSpan.FromSeconds(duration);
+        this.FilePath = filePath;
+        this.State = state;
     }
 
     public Song(Song s){
-        this.title = s.title;
-        this.author = s.author;
-        this.duration = s.duration;
-        this.filePath = s.filePath;
-        this.playbackState = s.playbackState;
+        this.Title = s.Title;
+        this.Author = s.Author;
+        this.Duration = s.Duration;
+        this.FilePath = s.FilePath;
+        this.State = s.State;
     }
 
-    public string getFilePath(){
-        return filePath;
-    }
+    
 
-    public override string ToString(){
-        return author + " - " + title;
-    }
+    public override string Describe() => $"this is a song, {LengthLabel}";
+    
 
 
 }

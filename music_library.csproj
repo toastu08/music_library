@@ -9,6 +9,10 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <AvaloniaResource Include="Assets\**" />
+    <!-- The test project lives inside this folder, so keep its sources out of the app build. -->
+    <Compile Remove="Tests\**" />
+    <AvaloniaXaml Remove="Tests\**" />
+    <None Remove="Tests\**" />
   </ItemGroup>
 
   <ItemGroup>
