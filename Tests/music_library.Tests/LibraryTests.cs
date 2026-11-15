@@ -1,4 +1,5 @@
 using System.Collections.Specialized;
+using Avalonia.Controls;
 using music_library.Models;
 
 namespace music_library.Tests;
@@ -197,5 +198,27 @@ public class LibraryTests
         library.AddSongFromPath("/music/Author - Title.mp3");
 
         Assert.Equal(new[] { NotifyCollectionChangedAction.Add }, changes);
+    }
+
+    // Avalonia throws "Collection implements INotifyCollectionChanged but not IList"
+    // unless the collection also implements the non-generic IList. This is how the ListBox sees it.
+    [Fact]
+    public void Library_CanBeWrappedByAvaloniaItemsSourceView()
+    {
+        var library = new Library();
+        library.AddSongFromPath("/music/Author - First.mp3");
+
+        var view = ItemsSourceView.GetOrCreate(library);
+
+        Assert.Single(view);
+
+        var changes = 0;
+        view.CollectionChanged += (_, _) => changes++;
+
+        library.AddSongFromPath("/music/Author - Second.mp3");
+
+        Assert.Equal(2, view.Count);
+        Assert.Equal(1, changes);
+        Assert.Equal("Author - Second", view[1]?.ToString());
     }
 }

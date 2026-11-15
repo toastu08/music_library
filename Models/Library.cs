@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
-public sealed class Library : IReadOnlyList<Audio>, INotifyCollectionChanged, INotifyPropertyChanged
+public sealed class Library : IReadOnlyList<Audio>, IList, INotifyCollectionChanged, INotifyPropertyChanged
 {
     private readonly List<Audio> _items = new();
 
@@ -99,4 +99,27 @@ public sealed class Library : IReadOnlyList<Audio>, INotifyCollectionChanged, IN
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Count)));
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
     }
+
+    // Avalonia only wraps a notifying collection that also implements the non-generic IList,
+    // so this is the read-only view used by the UI. Changes still go through Add/Remove.
+    bool IList.IsReadOnly => true;
+    bool IList.IsFixedSize => true;
+    bool ICollection.IsSynchronized => false;
+    object ICollection.SyncRoot => this;
+
+    object? IList.this[int index]
+    {
+        get => _items[index];
+        set => throw new NotSupportedException("Library can only be changed through Add and Remove.");
+    }
+
+    int IList.Add(object? value) => throw new NotSupportedException("Library can only be changed through Add and Remove.");
+    void IList.Clear() => throw new NotSupportedException("Library can only be changed through Add and Remove.");
+    void IList.Insert(int index, object? value) => throw new NotSupportedException("Library can only be changed through Add and Remove.");
+    void IList.Remove(object? value) => throw new NotSupportedException("Library can only be changed through Add and Remove.");
+    void IList.RemoveAt(int index) => throw new NotSupportedException("Library can only be changed through Add and Remove.");
+
+    bool IList.Contains(object? value) => value is Audio audio && _items.Contains(audio);
+    int IList.IndexOf(object? value) => value is Audio audio ? _items.IndexOf(audio) : -1;
+    void ICollection.CopyTo(Array array, int index) => ((ICollection)_items).CopyTo(array, index);
 }
