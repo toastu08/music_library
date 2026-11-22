@@ -12,6 +12,9 @@ public abstract class Audio{
     public string Id { get; init; } = $"trk-{Interlocked.Increment(ref _nextId):D3}";
     public string Title { get; set; } = string.Empty;
     public string Author { get; set; } = string.Empty;
+    public string Album { get; set; } = "Unknown Album";
+    public Genre Genre { get; set; } = Genre.Other;
+    public int Year { get; set; }
     public TimeSpan Duration { get; set; }
     public string FilePath { get; set; } = string.Empty;
     public PlaybackState State { get; set; }

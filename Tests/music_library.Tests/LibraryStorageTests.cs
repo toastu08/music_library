@@ -16,12 +16,28 @@ public class LibraryStorageTests
         try
         {
             var library = new Library();
-            var song = new Song("Song Title", "Song Author", 238, "/music/song.mp3", PlaybackState.Paused)
+            var song = new Song(
+                "Song Title",
+                "Song Author",
+                238,
+                "/music/song.mp3",
+                PlaybackState.Paused,
+                Genre.Rock,
+                2001,
+                "Song Album")
             {
                 Id = "trk-001",
                 PlayCount = 7
             };
-            var recording = new Recording("Recording Title", "Recording Author", 900, "/music/recording.mp3", PlaybackState.Stopped)
+            var recording = new Recording(
+                "Recording Title",
+                "Recording Author",
+                900,
+                "/music/recording.mp3",
+                PlaybackState.Stopped,
+                Genre.Jazz,
+                1999,
+                "Recording Album")
             {
                 Id = "trk-002",
                 PlayCount = 3
@@ -40,6 +56,9 @@ public class LibraryStorageTests
             Assert.Equal("trk-001", loadedSong.Id);
             Assert.Equal("Song Title", loadedSong.Title);
             Assert.Equal("Song Author", loadedSong.Author);
+            Assert.Equal("Song Album", loadedSong.Album);
+            Assert.Equal(Genre.Rock, loadedSong.Genre);
+            Assert.Equal(2001, loadedSong.Year);
             Assert.Equal(TimeSpan.FromSeconds(238), loadedSong.Duration);
             Assert.Equal("/music/song.mp3", loadedSong.FilePath);
             Assert.Equal(PlaybackState.Paused, loadedSong.State);
@@ -49,6 +68,9 @@ public class LibraryStorageTests
             Assert.Equal("trk-002", loadedRecording.Id);
             Assert.Equal("Recording Title", loadedRecording.Title);
             Assert.Equal("Recording Author", loadedRecording.Author);
+            Assert.Equal("Recording Album", loadedRecording.Album);
+            Assert.Equal(Genre.Jazz, loadedRecording.Genre);
+            Assert.Equal(1999, loadedRecording.Year);
             Assert.Equal(TimeSpan.FromSeconds(900), loadedRecording.Duration);
             Assert.Equal("/music/recording.mp3", loadedRecording.FilePath);
             Assert.Equal(PlaybackState.Stopped, loadedRecording.State);

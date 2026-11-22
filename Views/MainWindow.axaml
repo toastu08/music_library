@@ -27,16 +27,26 @@
                    OpenPaneLength="330">
 
             <SplitView.Pane>
-                <StackPanel Spacing="8" Margin="8">
-                    <!-- Open / close the pane (command not wired yet) -->
-                    <Button Content="☰" HorizontalAlignment="Stretch" Command="{Binding TogglePaneCommand}"/>
-                    <!-- Import a music source (no functionality yet) -->
-                    <Button Content="+" HorizontalAlignment="Stretch" Command="{Binding SelectFolderCommand}" CommandParameter="{Binding $parent[Window]}"/>
-                    <!-- Save/load the library as JSON -->
-                    <Button Content="Save" HorizontalAlignment="Stretch" Command="{Binding SaveLibraryCommand}"/>
-                    <Button Content="Load" HorizontalAlignment="Stretch" Command="{Binding LoadLibraryCommand}"/>
-                    <Button Content="PloyLoopTest" HorizontalAlignment="Stretch" Command="{Binding DescribeAllCommand}"/>
-                </StackPanel>
+                <ScrollViewer>
+                    <StackPanel Spacing="8" Margin="8">
+                        <!-- Open / close the pane (command not wired yet) -->
+                        <Button Content="☰" HorizontalAlignment="Stretch" Command="{Binding TogglePaneCommand}"/>
+                        <!-- Import a music source (no functionality yet) -->
+                        <Button Content="+" HorizontalAlignment="Stretch" Command="{Binding SelectFolderCommand}" CommandParameter="{Binding $parent[Window]}"/>
+                        <!-- Save/load the library as JSON -->
+                        <Button Content="Save" HorizontalAlignment="Stretch" Command="{Binding SaveLibraryCommand}"/>
+                        <Button Content="Load" HorizontalAlignment="Stretch" Command="{Binding LoadLibraryCommand}"/>
+                        <Button Content="PloyLoopTest" HorizontalAlignment="Stretch" Command="{Binding DescribeAllCommand}"/>
+
+                        <!-- S7 queries -->
+                        <TextBlock Text="Queries" FontWeight="Bold" Margin="0,8,0,0"/>
+                        <Button Content="Most played artist" HorizontalAlignment="Stretch" Command="{Binding ShowMostPlayedArtistCommand}"/>
+                        <Button Content="Hours by genre" HorizontalAlignment="Stretch" Command="{Binding ShowHoursPerGenreCommand}"/>
+                        <Button Content="Never played" HorizontalAlignment="Stretch" Command="{Binding ShowNeverPlayedCommand}"/>
+                        <Button Content="Longest album" HorizontalAlignment="Stretch" Command="{Binding ShowLongestAlbumCommand}"/>
+                        <Button Content="Top decade" HorizontalAlignment="Stretch" Command="{Binding ShowTopDecadeCommand}"/>
+                    </StackPanel>
+                </ScrollViewer>
             </SplitView.Pane>
 
             <SplitView.Content>
@@ -88,6 +98,34 @@
                         Maximum="100"/>
 
             </Grid>
+        </Border>
+
+        <!-- ================= Query result popup ================= -->
+        <Border Grid.RowSpan="2"
+                IsVisible="{Binding IsQueryResultOpen}"
+                Background="#80000000">
+            <Border Background="{DynamicResource SystemControlBackgroundAltHighBrush}"
+                    BorderBrush="{DynamicResource SystemControlForegroundBaseLowBrush}"
+                    BorderThickness="1"
+                    CornerRadius="8"
+                    Padding="16"
+                    MaxWidth="600"
+                    MaxHeight="440"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+                <Grid RowDefinitions="Auto,*,Auto">
+                    <TextBlock Text="{Binding QueryResultTitle}"
+                               FontSize="18"
+                               FontWeight="Bold"/>
+                    <ScrollViewer Grid.Row="1" Margin="0,12">
+                        <TextBlock Text="{Binding QueryResultBody}" TextWrapping="Wrap"/>
+                    </ScrollViewer>
+                    <Button Grid.Row="2"
+                            Content="Close"
+                            HorizontalAlignment="Right"
+                            Command="{Binding CloseQueryResultCommand}"/>
+                </Grid>
+            </Border>
         </Border>
 
     </Grid>

@@ -37,6 +37,15 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private int _trackCount;
 
+    [ObservableProperty]
+    private bool _isQueryResultOpen;
+
+    [ObservableProperty]
+    private string _queryResultTitle = string.Empty;
+
+    [ObservableProperty]
+    private string _queryResultBody = string.Empty;
+
 
     //init
     public MainViewModel(){
@@ -160,6 +169,42 @@ public partial class MainViewModel : ViewModelBase
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException){
             Log.Write($"Could not load the library: {ex.Message}");
         }
+    }
+
+    [RelayCommand]
+    private void ShowMostPlayedArtist(){
+        ShowQueryResult(LibraryQueries.MostPlayedArtist(SongLibrary));
+    }
+
+    [RelayCommand]
+    private void ShowHoursPerGenre(){
+        ShowQueryResult(LibraryQueries.HoursPerGenre(SongLibrary));
+    }
+
+    [RelayCommand]
+    private void ShowNeverPlayed(){
+        ShowQueryResult(LibraryQueries.NeverPlayed(SongLibrary));
+    }
+
+    [RelayCommand]
+    private void ShowLongestAlbum(){
+        ShowQueryResult(LibraryQueries.LongestAlbum(SongLibrary));
+    }
+
+    [RelayCommand]
+    private void ShowTopDecade(){
+        ShowQueryResult(LibraryQueries.TopDecade(SongLibrary));
+    }
+
+    [RelayCommand]
+    private void CloseQueryResult(){
+        IsQueryResultOpen = false;
+    }
+
+    private void ShowQueryResult(QueryResult result){
+        QueryResultTitle = result.Title;
+        QueryResultBody = result.Body;
+        IsQueryResultOpen = true;
     }
 
     [RelayCommand]

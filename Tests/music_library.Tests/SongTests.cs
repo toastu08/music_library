@@ -25,6 +25,9 @@ public class SongTests
     {
         var original = new Song("Title", "Author", 238, "/music/song.mp3", PlaybackState.Playing)
         {
+            Album = "Test Album",
+            Genre = Genre.Jazz,
+            Year = 1999,
             PlayCount = 4
         };
 
@@ -32,11 +35,24 @@ public class SongTests
 
         Assert.Equal(original.Title, copy.Title);
         Assert.Equal(original.Author, copy.Author);
+        Assert.Equal(original.Album, copy.Album);
+        Assert.Equal(original.Genre, copy.Genre);
+        Assert.Equal(original.Year, copy.Year);
         Assert.Equal(original.Duration, copy.Duration);
         Assert.Equal(original.FilePath, copy.FilePath);
         Assert.Equal(original.State, copy.State);
         Assert.Equal(original.PlayCount, copy.PlayCount);
         Assert.NotSame(original, copy);
+    }
+
+    [Fact]
+    public void Constructor_WithoutMetadata_UsesPlaceholderValues()
+    {
+        var song = new Song("Title", "Author", 238, "/music/song.mp3", PlaybackState.Stopped);
+
+        Assert.Equal("Unknown Album", song.Album);
+        Assert.Equal(Genre.Other, song.Genre);
+        Assert.Equal(0, song.Year);
     }
 
     [Fact]
