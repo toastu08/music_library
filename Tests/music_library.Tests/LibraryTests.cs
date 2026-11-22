@@ -188,6 +188,22 @@ public class LibraryTests
     }
 
     [Fact]
+    public void Clear_RemovesEverythingAndRaisesReset()
+    {
+        var library = new Library();
+        library.AddSongFromPath("/music/Author - First.mp3");
+        library.AddSongFromPath("/music/Author - Second.mp3");
+        var changes = new List<NotifyCollectionChangedAction>();
+        ((INotifyCollectionChanged)library).CollectionChanged +=
+            (_, e) => changes.Add(e.Action);
+
+        library.Clear();
+
+        Assert.Empty(library);
+        Assert.Equal(new[] { NotifyCollectionChangedAction.Reset }, changes);
+    }
+
+    [Fact]
     public void AddSongFromPath_NotifiesCollectionChanged()
     {
         var library = new Library();

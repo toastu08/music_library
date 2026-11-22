@@ -2,6 +2,11 @@ namespace music_library.Models;
 using System;
 
 public class Recording : Audio{
+
+    public Recording(){
+        this.State = PlaybackState.Stopped;
+    }
+
     public Recording(string title, string author, int duration, string filePath, PlaybackState state){
         this.Title = title;
         this.Author = author;
@@ -16,6 +21,7 @@ public class Recording : Audio{
         this.Duration = r.Duration;
         this.FilePath = r.FilePath;
         this.State = r.State;
+        this.PlayCount = r.PlayCount;
     }
 
     public override string Describe() => $"this is a recording, {LengthLabel}";

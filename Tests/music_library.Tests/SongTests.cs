@@ -23,7 +23,10 @@ public class SongTests
     [Fact]
     public void CopyConstructor_CopiesEveryField()
     {
-        var original = new Song("Title", "Author", 238, "/music/song.mp3", PlaybackState.Playing);
+        var original = new Song("Title", "Author", 238, "/music/song.mp3", PlaybackState.Playing)
+        {
+            PlayCount = 4
+        };
 
         var copy = new Song(original);
 
@@ -32,6 +35,7 @@ public class SongTests
         Assert.Equal(original.Duration, copy.Duration);
         Assert.Equal(original.FilePath, copy.FilePath);
         Assert.Equal(original.State, copy.State);
+        Assert.Equal(original.PlayCount, copy.PlayCount);
         Assert.NotSame(original, copy);
     }
 

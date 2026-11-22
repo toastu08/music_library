@@ -57,6 +57,9 @@ Desktop.ini
 *.tmp
 *.temp
 
+# ---- Saved library state ----
+library.json
+
 
 specs.md
 AGENTS.md

@@ -2,6 +2,10 @@ namespace music_library.Models;
 using System;
 
 public class Song : Audio{
+
+    public Song(){
+        this.State = PlaybackState.Stopped;
+    }
     
     public Song(string title, string author, int duration, string filePath, PlaybackState state){
         this.Title = title;
@@ -17,6 +21,7 @@ public class Song : Audio{
         this.Duration = s.Duration;
         this.FilePath = s.FilePath;
         this.State = s.State;
+        this.PlayCount = s.PlayCount;
     }
 
     

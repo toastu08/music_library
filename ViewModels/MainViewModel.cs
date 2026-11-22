@@ -1,6 +1,8 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
+using System.IO;
+using System.Text.Json;
 using LibVLCSharp.Shared;
 using music_library.Models;
 using music_library.Services;
@@ -71,6 +73,7 @@ public partial class MainViewModel : ViewModelBase
         }
         RecentlyPlayed.Record(SelectedAudio);
         _mediaEngine.Play(SelectedAudio.getFilePath());
+        SelectedAudio.PlayCount++;
     }
 
     [RelayCommand]
@@ -123,6 +126,40 @@ public partial class MainViewModel : ViewModelBase
     [RelayCommand]
     public void TogglePane(){
         IsPaneOpen = !IsPaneOpen;
+    }
+
+    [RelayCommand]
+    private async Task SaveLibrary(){
+        try{
+            await LibraryStorage.SaveAsync(SongLibrary, LibraryStorage.DefaultPath);
+            Log.Write($"Saved {SongLibrary.Count} tracks to {LibraryStorage.DefaultPath}");
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException){
+            Log.Write($"Could not save the library: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private async Task LoadLibrary(){
+        try{
+            var loaded = await LibraryStorage.LoadAsync(LibraryStorage.DefaultPath);
+
+            if (loaded is null){
+                Log.Write($"No saved library found at {LibraryStorage.DefaultPath}");
+                return;
+            }
+
+            SongLibrary.Clear();
+
+            foreach (Audio audio in loaded){
+                SongLibrary.Add(audio);
+            }
+
+            Log.Write($"Loaded {loaded.Count} tracks from {LibraryStorage.DefaultPath}");
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or JsonException){
+            Log.Write($"Could not load the library: {ex.Message}");
+        }
     }
 
     [RelayCommand]

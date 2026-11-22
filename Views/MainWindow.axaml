@@ -32,6 +32,9 @@
                     <Button Content="☰" HorizontalAlignment="Stretch" Command="{Binding TogglePaneCommand}"/>
                     <!-- Import a music source (no functionality yet) -->
                     <Button Content="+" HorizontalAlignment="Stretch" Command="{Binding SelectFolderCommand}" CommandParameter="{Binding $parent[Window]}"/>
+                    <!-- Save/load the library as JSON -->
+                    <Button Content="Save" HorizontalAlignment="Stretch" Command="{Binding SaveLibraryCommand}"/>
+                    <Button Content="Load" HorizontalAlignment="Stretch" Command="{Binding LoadLibraryCommand}"/>
                     <Button Content="PloyLoopTest" HorizontalAlignment="Stretch" Command="{Binding DescribeAllCommand}"/>
                 </StackPanel>
             </SplitView.Pane>

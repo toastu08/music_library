@@ -40,6 +40,16 @@ public sealed class Library : IReadOnlyList<Audio>, IList, INotifyCollectionChan
         return true;
     }
 
+    public void Clear(){
+        if (_items.Count == 0){
+            return;
+        }
+
+        _items.Clear();
+        RaiseCountChanged();
+        CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+    }
+
     public int IndexOf(Audio audio) => _items.IndexOf(audio);
 
     public IEnumerator<Audio> GetEnumerator(){
@@ -101,7 +111,7 @@ public sealed class Library : IReadOnlyList<Audio>, IList, INotifyCollectionChan
     }
 
     // Avalonia only wraps a notifying collection that also implements the non-generic IList,
-    // so this is the read-only view used by the UI. Changes still go through Add/Remove.
+    // so this is the read-only view used by the UI. Changes still go through Add/Remove/Clear.
     bool IList.IsReadOnly => true;
     bool IList.IsFixedSize => true;
     bool ICollection.IsSynchronized => false;
